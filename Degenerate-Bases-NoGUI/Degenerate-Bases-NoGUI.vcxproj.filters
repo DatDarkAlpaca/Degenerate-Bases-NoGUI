@@ -1,0 +1,64 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="src\main.cpp" />
+    <ClCompile Include="src\permutator\permutator.cpp">
+      <Filter>Permutator</Filter>
+    </ClCompile>
+    <ClCompile Include="src\data.cpp">
+      <Filter>Application\Data</Filter>
+    </ClCompile>
+    <ClCompile Include="src\pch.cpp">
+      <Filter>Application\PCH</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="Application">
+      <UniqueIdentifier>{86f6fa89-f51a-4b3d-bca3-1b0d35ecd7d1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Permutator">
+      <UniqueIdentifier>{41f7bccf-2b95-4219-bddb-1fe5088f4d9a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Fasta">
+      <UniqueIdentifier>{35ad3010-34c6-45fe-b4f8-916464a0e74a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Settings">
+      <UniqueIdentifier>{9cd140b8-ac71-4534-8e5c-461cbdd70a3b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Application\Menu">
+      <UniqueIdentifier>{2e62cf23-8a54-4caa-b075-b62c4046efc0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Application\Data">
+      <UniqueIdentifier>{92b0be7a-a38f-4ec6-89e0-792debdf1f94}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Application\PCH">
+      <UniqueIdentifier>{2ef1c2bd-c873-4e42-8198-b8325f31d722}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Input">
+      <UniqueIdentifier>{300c7e0e-ab32-4374-a01d-1b08f56a253a}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="src\permutator\permutator.h">
+      <Filter>Permutator</Filter>
+    </ClInclude>
+    <ClInclude Include="src\fasta\fasta.h">
+      <Filter>Fasta</Filter>
+    </ClInclude>
+    <ClInclude Include="src\settings\settings.h">
+      <Filter>Settings</Filter>
+    </ClInclude>
+    <ClInclude Include="src\data.h">
+      <Filter>Application\Data</Filter>
+    </ClInclude>
+    <ClInclude Include="src\pch.h">
+      <Filter>Application\PCH</Filter>
+    </ClInclude>
+    <ClInclude Include="src\menu\menu.h">
+      <Filter>Application\Menu</Filter>
+    </ClInclude>
+    <ClInclude Include="src\input\input.h">
+      <Filter>Input</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>
