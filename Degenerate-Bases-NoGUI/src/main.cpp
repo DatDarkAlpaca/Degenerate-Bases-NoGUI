@@ -108,9 +108,6 @@ namespace
 
 		Fasta::Close();
 
-		if (Data::cartesianSize != Data::outcomes)
-			UnmatchedBasesErrors();
-
 		std::cout << std::dec << '\n';
 	}
 }
@@ -139,6 +136,12 @@ int main()
 
 		Input::SanitizeInput();
 
+		if (Data::invalidSequence)
+		{
+			InvalidSequence();
+			continue;
+		}
+
 		// Warning:
 		if (Data::sequence.size() > Data::warningCartesianSize)
 			CartesianSizeWarning();
@@ -148,6 +151,10 @@ int main()
 
 		// Post:
 		DebugInfo();
+
+		// Unmatched Error:
+		if (Data::cartesianSize != Data::outcomes)
+			UnmatchedBasesErrors();
 
 		PostExecution();
 

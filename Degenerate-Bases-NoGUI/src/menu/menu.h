@@ -62,8 +62,7 @@ namespace dgn
 
 	inline void SBIUsed()
 	{
-		std::cout << "[!] No degenerate bases were detected. Using SBI." << '\n';
-		std::cout << "\n";
+		std::cout << "[!] No degenerate bases were detected. Using SBI.\n\n";
 	}
 
 	inline void DebugInfo()
@@ -84,6 +83,11 @@ namespace dgn
 		}
 	}
 
+	inline void InvalidSequence()
+	{
+		std::cout << "[!] The input sequence is invalid. It probaly had no valid bases.\n\n";
+	}
+
 	inline void PostExecution()
 	{
 		std::cout << "[!] The sequence has been successfully computed and written to a fasta file" << '\n' << '\n';
@@ -93,18 +97,18 @@ namespace dgn
 
 	inline void Finalize()
 	{
-		std::cout << "Bye bye!" << '\n';
+		std::cout << "Bye bye!\n";
 	}
 
 	inline void UnmatchedBasesErrors()
 	{
 		std::cout << "[!] A lethal error has ocurred. \
-			 The estimated amount of outcomes does not match the real amount of outcomes." << '\n';
+			 The estimated amount of outcomes does not match the real amount of outcomes.\n\n";
 	}
 
 	inline void CartesianSizeWarning()
 	{
 		std::cout << "[!] The input sequence will result in a considerable amount of outcomes. (" << Data::cartesianSize << ")" << '\n';
-		std::cout << "    It may take a long time to compute this sequence." << '\n';
+		std::cout << "    It may take a long time to compute this sequence.\n\n";
 	}
 }

@@ -50,6 +50,9 @@ namespace dgn
 					return !(find(bases.begin(), bases.end(), c) != bases.end());
 				}),
 			Data::sequence.end());
+
+			if (Data::sequence.empty())
+				Data::invalidSequence = true;
 		}
 
 		static void CountBases()
