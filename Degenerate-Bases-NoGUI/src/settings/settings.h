@@ -38,12 +38,9 @@ namespace dgn
 				{ "directory", "./results/" }
 				});
 
-			iniStruct["chunks"].set({ { "chunk_size", "1024" } });
+			iniStruct["debug"].set({{ "enable", "false" }});
 
-			iniStruct["debug"].set({
-				{ "enable", "false" },
-				{ "write_debug", "false" },
-				});
+			iniStruct["multithreading"].set({{"threads", "-1"}});
 
 			iniFile.generate(iniStruct, true);
 		}

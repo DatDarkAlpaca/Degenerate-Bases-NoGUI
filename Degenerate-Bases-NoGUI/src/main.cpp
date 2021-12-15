@@ -15,13 +15,6 @@ namespace
 		{
 			std::getline(std::cin, input);
 
-			if (input.length() >= 80)
-			{
-				std::cout << "[!] The sequence is longer than 80 bases. This might cause writing errors." << '\n';
-				std::cin.clear();
-				break;
-			}
-
 			if (input.empty())
 			{
 				std::cout << "The sequence is empty. Please try again." << '\n';
@@ -30,7 +23,9 @@ namespace
 				dgn::GetInput();
 				continue;
 			}
-			else break;
+
+			else 
+				break;
 		}
 
 		return input;
@@ -69,6 +64,55 @@ namespace
 		else
 			return false;
 	}
+
+	void HandleExecution()
+	{
+		using namespace dgn;
+
+		// SBI:
+		if (!Data::anyDegenerate)
+			return Permutator::SimpleBaseInsertion();
+
+		// Preparing for lazy cartesian:
+		Permutator::Prepare();
+
+		// Fasta file:
+		auto dir = Settings::Get("results", "directory") + Settings::Get("results", "prefix") + Permutator::CountFiles() + "." + Settings::Get("results", "format");
+		Fasta::Open(dir);
+
+		// Execution & Thread handling::
+		high_resolution_clock::time_point begin = high_resolution_clock::now();
+
+		int amountThreads = std::stoi(Settings::Get("multithreading", "threads"));
+		if (amountThreads == 0 || Data::cartesianSize < (2 << 4))
+			Permutator::LazyPermutation();
+		else
+		{
+			if (amountThreads == -1)
+				amountThreads = std::thread::hardware_concurrency();
+
+			std::vector<std::thread> threads;
+
+			const size_t step = Data::cartesianSize / amountThreads;
+			for (size_t i = 0; i < amountThreads; i++)
+				threads.push_back(std::thread(Permutator::LazyPermutation, i * step, (i + 1) * step));
+
+			for (auto& thread : threads)
+			{
+				if (thread.joinable())
+					thread.join();
+			}
+		}
+
+		Data::permutationTime = duration_cast<nanoseconds>(high_resolution_clock::now() - begin).count() / 1000000;
+
+		Fasta::Close();
+
+		if (Data::cartesianSize != Data::outcomes)
+			UnmatchedBasesErrors();
+
+		std::cout << std::dec << '\n';
+	}
 }
 
 int main()
@@ -77,25 +121,32 @@ int main()
 
 	Settings::CreateDefault();
 	Settings::ReadSettings();
-
 	Fasta::CreateDefault();
 
 	while (true)
 	{
+		Settings::ReadSettings();
+
+		// Headers:
 		Header();
 		ShowInformation();
 
+		// Input & Command:
 		GetInput();
-
 		Data::sequence = RetrieveInput();
-
 		if (ParseCommands())
 			continue;
 
 		Input::SanitizeInput();
 
-		Permutator::LazyPermutation();
+		// Warning:
+		if (Data::sequence.size() > Data::warningCartesianSize)
+			CartesianSizeWarning();
 
+		// Permutations:
+		HandleExecution();
+
+		// Post:
 		DebugInfo();
 
 		PostExecution();

@@ -21,9 +21,9 @@ namespace dgn
 	{
 		std::cout << '\n';
 
-		std::cout << "Please enter a sequence containing degenerate bases bellow. It can have spaces, uppercase letters and uppercase letters." << '\n';
-		std::cout << "If any letter on the sequence is not a valid base, the program will tell you." << '\n';
-		std::cout << "To list all possible bases, write 'bases' then press Enter." << '\n';
+		std::cout << "Please input a sequence containing degenerate bases. It can have spaces, uppercase, and lowercase letters." << '\n';
+		std::cout << "If any base is invalid, the program will inform you." << '\n';
+		std::cout << "To list all possible bases, type 'bases' then press Enter." << '\n';
 
 		std::cout << '\n';
 	}
@@ -31,7 +31,7 @@ namespace dgn
 	inline void BaseList()
 	{
 		std::cout << '\n';
-		std::cout << "Listed bellow is a list of the available degenerate bases." << '\n' << '\n';
+		std::cout << "The following list contains all available degenerate bases." << '\n' << '\n';
 
 		std::cout << "N - A, C, T, G" << '\n' << '\n';
 
@@ -73,14 +73,13 @@ namespace dgn
 
 		else
 		{
-			
 			std::cout << "-=-=-=-= Debug Info. =-=-=-=-" << '\n';
-			std::cout << "Base sequence's length  :     " << Data::sequence.size() << "     -    (" << Data::sequence << ")" << '\n';
-			std::cout << "Amount of outcomes      :     " << Data::outcomes << '\n';
-			std::cout << "Amount of iterations    :     " << Data::iterations << '\n';
+			std::cout << "Base sequence's length  :   " << Data::sequence.size() << '\n';
+			std::cout << "Amount of outcomes      :   " << Data::outcomes << '\n';
+			std::cout << "Amount of iterations    :   " << Data::iterations << '\n';
 			std::cout << '\n';
-			std::cout << "Total Iteration time    :     " << Data::permutationTime << "ms" << '\n';
-			std::cout << "File writing time       :     " << Data::writeFastaTime << "ms" << '\n';
+			std::cout << "Total Iteration time    :   " << Data::permutationTime << "ms" << '\n';
+			std::cout << "File writing time       :   " << Data::writeFastaTime << "ms" << '\n';
 			std::cout << '\n';
 		}
 	}
@@ -97,27 +96,15 @@ namespace dgn
 		std::cout << "Bye bye!" << '\n';
 	}
 
-	inline void WriteChunkSize()
-	{
-		// Todo: Recover this.
-		auto chunkSize = dgn::Settings::Get("", "");
-		// std::cout << "-=-= Chunk Size : " << program_data::chunkSize << " =-=-" << '\n';
-	}
-
-	inline void WriteChunk(size_t chunk)
-	{
-		std::cout << "[!] Writting chunk 0x0" << std::hex << chunk << "..." << '\n';
-	}
-
 	inline void UnmatchedBasesErrors()
 	{
-		std::cout << "[!!!] A LETHAL error has ocurred. \
+		std::cout << "[!] A lethal error has ocurred. \
 			 The estimated amount of outcomes does not match the real amount of outcomes." << '\n';
 	}
 
 	inline void CartesianSizeWarning()
 	{
-		std::cout << "[!] The following sequence will result in a considerable amount of outcomes." << '\n';
-		std::cout << "It may take a long time to compute this sequence, and it will generate a massive file." << '\n';
+		std::cout << "[!] The input sequence will result in a considerable amount of outcomes. (" << Data::cartesianSize << ")" << '\n';
+		std::cout << "    It may take a long time to compute this sequence." << '\n';
 	}
 }

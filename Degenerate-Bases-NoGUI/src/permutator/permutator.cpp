@@ -6,7 +6,17 @@
 #include "../fasta/fasta.h"
 #include "../settings/settings.h"
 
-void dgn::Permutator::Preparation()
+namespace
+{
+	inline void WriteTimed(const std::string& data)
+	{
+		high_resolution_clock::time_point begin = high_resolution_clock::now();
+		dgn::Fasta::Write(data);
+		dgn::Data::writeFastaTime += duration_cast<nanoseconds>(high_resolution_clock::now() - begin).count() / 1000000;
+	}
+}
+
+void dgn::Permutator::Prepare()
 {
 	size_t inputSize = Data::sequence.size();
 
@@ -58,6 +68,17 @@ void dgn::Permutator::Preparation()
 	}
 }
 
+std::string dgn::Permutator::CountFiles()
+{
+	auto dirIter = std::filesystem::directory_iterator("results");
+
+	auto fileCount = std::count_if(begin(dirIter), end(dirIter),
+		[](auto& entry) { return entry.is_regular_file(); }
+	);
+
+	return std::to_string(fileCount);
+}
+
 unsigned char dgn::Permutator::LazyCartesian(least j, least i)
 {
 	if ((size_t)j >= Data::cartesianSize)
@@ -78,42 +99,20 @@ unsigned char dgn::Permutator::LazyCartesian(least j, least i)
 void dgn::Permutator::SimpleBaseInsertion()
 {
 	Fasta::Open(Settings::Get("results", "directory") + Settings::Get("results", "prefix") + Permutator::CountFiles() + "." + Settings::Get("results", "format"));
-	
-	Fasta::Write(Data::sequence);
-	
+	Fasta::Write(Data::sequence);	
 	Fasta::Close();
+
+	Data::outcomes = 1;
 
 	SBIUsed();
 }
 
 void dgn::Permutator::LazyPermutation(least min, least max)
 {
-	// SBI:
-	if (!Data::anyDegenerate)
-		return SimpleBaseInsertion();
-
-	// Lazy algorithm preparation:
-	Preparation();
-
-	// Fasta file:
-	auto dir = Settings::Get("results", "directory") + Settings::Get("results", "prefix") + Permutator::CountFiles() + "." + Settings::Get("results", "format");
-	Fasta::Open(dir);
-
-	// Chunks preparation:
-	size_t chunksWritten = 0;
-	std::vector<std::string> chunkResults = {};
-	size_t chunkSize = std::stoul(Settings::Get("chunks", "chunk_size"));
-
-	if (Settings::ToBool(Settings::Get("debug", "chunk_debug")))
-		WriteChunkSize();
-
-	// Reserving the result string:
 	std::string result;
 	result.reserve(Data::sequence.size());
 
-	high_resolution_clock::time_point begin = high_resolution_clock::now();
-
-	for (size_t j = min; j < max; ++j)
+	for (least j = min; j < max; ++j)
 	{
 		for (size_t i = 0; i < Data::sequence.size(); ++i)
 		{
@@ -131,28 +130,9 @@ void dgn::Permutator::LazyPermutation(least min, least max)
 			Data::iterations++;
 		}
 
-		// Writting:
-		if (chunkResults.size() == chunkSize)
-			InsertChunk(std::move(chunkResults), chunksWritten);
-
-		chunkResults.push_back(result);
+		WriteTimed(result);
 		result.clear();
 
 		Data::outcomes++;
 	}
-
-	// Chunk finalization:
-	if (!chunkResults.empty())
-		InsertChunk(std::move(chunkResults), chunksWritten);
-
-	if (Data::cartesianSize != Data::outcomes)
-		UnmatchedBasesErrors();
-
-	std::cout << std::dec << '\n';
-
-	Fasta::Close();
-
-	high_resolution_clock::time_point end = high_resolution_clock::now();
-
-	Data::permutationTime = duration_cast<nanoseconds>(high_resolution_clock::now() - begin).count() / 1000000;
 }

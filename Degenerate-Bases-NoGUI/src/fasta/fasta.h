@@ -31,7 +31,7 @@ namespace dgn
             using namespace std::filesystem;
 
             auto directory = Settings::Get("results", "directory");
-            if (!is_directory(directory) || exists(directory))
+            if (!is_directory(directory))
                 create_directory(directory);
         }
 
@@ -43,8 +43,10 @@ namespace dgn
 
             const std::string header = Settings::Get("fasta", "header_character") + Settings::Get("fasta", "header_template");
 
+            std::lock_guard<std::mutex> lock(m_WriteMutex);
+
             s_File << header << std::to_string(index) << '\n';
-            s_File << '\n' << data << '\n';
+            s_File << data << '\n';
 
             ++index;
         }
@@ -56,6 +58,8 @@ namespace dgn
 
             const std::string header = Settings::Get("fasta", "header_character") + Settings::Get("fasta", "header_template");
 
+            std::lock_guard<std::mutex> lock(m_WriteMutex);
+
             for (const auto& result : data)
             {
                 s_File << header << std::to_string(index) << '\n';
@@ -66,6 +70,7 @@ namespace dgn
         }
 
     private:
+        static inline std::mutex m_WriteMutex;
         static inline std::fstream s_File;
 
     public:
