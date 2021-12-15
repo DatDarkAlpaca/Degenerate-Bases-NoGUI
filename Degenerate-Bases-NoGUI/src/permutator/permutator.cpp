@@ -70,7 +70,7 @@ void dgn::Permutator::Prepare()
 
 std::string dgn::Permutator::CountFiles()
 {
-	auto dirIter = std::filesystem::directory_iterator("results");
+	auto dirIter = std::filesystem::directory_iterator(Settings::Get("results", "directory"));
 
 	auto fileCount = std::count_if(begin(dirIter), end(dirIter),
 		[](auto& entry) { return entry.is_regular_file(); }
